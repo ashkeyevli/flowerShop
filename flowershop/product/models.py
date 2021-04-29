@@ -14,7 +14,7 @@ class Category(models.Model):
         return reverse('category_detail', kwargs={'slug': self.slug})
 
 class Flower(models.Model):
-    category = models.ForeignKey(Category, verbose_name='Категория', on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, verbose_name='Категория', on_delete=models.CASCADE, related_name='flowers')
     title = models.CharField(max_length=255, verbose_name='Наименование')
     slug = models.SlugField(unique=True)
     image = models.ImageField(upload_to='../flowershop/product/images/flower', default=None, verbose_name='Изображение')
