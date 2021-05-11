@@ -1,7 +1,7 @@
 from django.urls import path
 from rest_framework import routers
 
-from product.views import categories_view, CategoryDetailAPIView, flowers_view,FlowerDetailAPIView
+from product.views import categories_view, CategoryDetailAPIView, flowers_view,FlowerDetailAPIView, FlowerViewSet
 # router = routers.SimpleRouter()
 # router.register('<int:pk>/flowers', FlowersViewSet, basename='product')
 
@@ -10,11 +10,12 @@ from product.views import categories_view, CategoryDetailAPIView, flowers_view,F
 #     'get': 'list',
 #     'post': 'create'
 # })
-
+router = routers.SimpleRouter()
+router.register('flowers', FlowerViewSet )
 urlpatterns = [
     path('', categories_view),
     path('category/<int:pk>/', CategoryDetailAPIView.as_view()),
     path('category/<int:pk>/flowers', flowers_view),
     path('flowers/<int:pk>', FlowerDetailAPIView.as_view()),
 ]
-# urlpatterns = router.urls
+urlpatterns += router.urls

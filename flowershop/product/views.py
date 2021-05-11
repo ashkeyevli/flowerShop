@@ -12,6 +12,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 # Create your views here.
+from rest_framework.viewsets import GenericViewSet
+
 from product.models import Category, Flower
 from product.serializers import CateogriesSerializer, FlowerSerializer, FlowerNewSerializer
 
@@ -62,6 +64,42 @@ def flowers_view(request, pk):
             serializer.save()
             return Response(serializer.data, status=201)
         return Response(serializer.errors, status=500)
+
+class FlowerViewSet(mixins.ListModelMixin, GenericViewSet):
+     # permission_classes = AllowAny
+     # queryset = Book.objects.all()
+     serializer_class = FlowerSerializer
+     queryset = Flower.objects.all()
+     #
+     # def get_queryset(self):
+     #     return Events.objects.all()
+     # def get_permissions(self):
+     #     if self.action == 'list':
+     #         permission_classes = (AllowAny,)
+     #     else:
+     #         permission_classes = (IsAuthenticated,)
+     #
+     #     return [permission() for permission in permission_classes]
+     # def list(self, request):
+     #     serializer = BookSerializer(self.get_queryset(), many=True)
+     #     return Response(serializer.data)
+     @action(methods=['GET'], detail=False, url_path='unavailable')
+     def not_active(self, request):
+         # filter = BookFilter(request.GET, queryset=Book.objects.all())
+         queryset = Flower.objects.filter(available=False)
+         serializer = FlowerSerializer(queryset, many=True)
+         return Response(serializer.data)
+         #
+         # # filter = BookFilter(request.GET, queryset=Book.objects.all())
+         # # queryset = Book.objects.filter(is_active=False)
+         # serializer = BookSerializer(self.get_queryset(), many=True)
+         # return Response(serializer.data)
+     #
+     # @action(methods=['POST'], detail=False, permission_classes=(AllowAny,))
+     # def create_book(self, request):
+     #     serializer = BookSerializer(data=request.data)
+     #     serializer.is_valid(raise_exception=True)
+     #     return Response('OK')
 
 
 
