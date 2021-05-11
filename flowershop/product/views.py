@@ -18,58 +18,113 @@ from product.models import Category, Flower
 from product.serializers import CateogriesSerializer, FlowerSerializer, FlowerNewSerializer
 
 
-@api_view(['GET', 'POST'])
-def categories_view(request):
-    if request.method == 'GET':
-        category_items = Category.objects.all()
-        serializer = CateogriesSerializer(category_items, many=True)
-        return Response(serializer.data, status=200)
-    elif request.method == 'POST':
-        serializer = CateogriesSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=201)
-        return Response(serializer.errors, status=500)
 
-class CategoryDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
+class CategoryViewSet(viewsets.ModelViewSet):
+    # permission_classes = AllowAny
+    # queryset = Book.objects.all()
+    # serializer_class = EventSerializer
     queryset = Category.objects.all()
     serializer_class = CateogriesSerializer
+
+    #
+    # def get_queryset(self):
+    #     return Events.objects.all()
+
+    # def get_serializer_class(self):
+    #     if self.action == 'list':
+    #         return EventSerializer
+    #     elif self.action == 'create':
+    #         return EventSerializer
+    #     return FullEventSerializer
+
+
+# @api_view(['GET', 'POST'])
+# def categories_view(request):
+#     if request.method == 'GET':
+#         category_items = Category.objects.all()
+#         serializer = CateogriesSerializer(category_items, many=True)
+#         return Response(serializer.data, status=200)
+#     elif request.method == 'POST':
+#         serializer = CateogriesSerializer(data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data, status=201)
+#         return Response(serializer.errors, status=500)
+
+# class CategoryDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
+#     queryset = Category.objects.all()
+#     serializer_class = CateogriesSerializer
 
 
 # class CategoryFlowers(generics.ListCreateAPIView):
 #     queryset = Flower.objects.all()
 #     serializer_class = FlowerSerializer
 
-class FlowerDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
-     queryset = Flower.objects.all()
-     serializer_class = FlowerSerializer
+
+class CategoryFlowerViewSet(
+                  mixins.CreateModelMixin,
+                  viewsets.GenericViewSet):
+    # permission_classes = AllowAny
+    # queryset = Book.objects.all()
+    # serializer_class = EventSerializer
+    queryset = Flower.objects.all()
+    # serializer_class = FlowerNewSerializer
+    lookup_field = 'pk'
+
+    # def  get_queryset(self):
+    #     pk = self.kwargs.get['pk']
+    #     return Flower.objects.filter(category=pk)
+
+    # @action(methods=['GET'], detail=True)
+    def list(self, request, pk):
+        # filter = BookFilter(request.GET, queryset=Book.objects.all())
+        print(pk)
+        queryset = Flower.objects.filter(category_id=pk)
+
+        serializer = FlowerSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+    # @action(methods=['POST'], detail=True)
+    # def create_category_flowers(self, request, pk):
+    #     # filter = BookFilter(request.GET, queryset=Book.objects.all())
+    #     queryset = Flower.objects.filter(category_id=pk)
+    #     serializer = FlowerSerializer(queryset, many=True)
+    #     serializer.is_valid(raise_exception=True)
+    #     return Response(serializer.data)
 
 
-@api_view(['GET', 'POST'])
-def flowers_view(request, pk):
-    try:
-        flowers = Flower.objects.filter(category=pk)
-    except Flower.DoesNotExist as e:
-        return Response({'error': str(e)})
+# class FlowerDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
+#      queryset = Flower.objects.all()
+#      serializer_class = FlowerSerializer
 
-    if request.method == 'GET':
-        serializer = FlowerNewSerializer(flowers, many=True)
-        return Response(serializer.data, status=200)
 
-    elif request.method == 'POST':
-        context = {"category_id": pk}
+# @api_view(['GET', 'POST'])
+# def flowers_view(request, pk):
+#     try:
+#         flowers = Flower.objects.filter(category=pk)
+#     except Flower.DoesNotExist as e:
+#         return Response({'error': str(e)})
+#
+#     if request.method == 'GET':
+#         serializer = FlowerNewSerializer(flowers, many=True)
+#         return Response(serializer.data, status=200)
+#
+#     elif request.method == 'POST':
+#         context = {"category_id": pk}
+#
+#         serializer = FlowerNewSerializer(data=request.data, context = context)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data, status=201)
+#         return Response(serializer.errors, status=500)
 
-        serializer = FlowerNewSerializer(data=request.data, context = context)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=201)
-        return Response(serializer.errors, status=500)
-
-class FlowerViewSet(mixins.ListModelMixin, GenericViewSet):
+class FlowerViewSet(viewsets.ModelViewSet):
      # permission_classes = AllowAny
      # queryset = Book.objects.all()
      serializer_class = FlowerSerializer
      queryset = Flower.objects.all()
+
+
      #
      # def get_queryset(self):
      #     return Events.objects.all()

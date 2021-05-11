@@ -67,15 +67,27 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 
 class Customer(User):
-    birth_date = models.DateField(null=True, blank=True)
+    customer_type = models.SmallIntegerField(choices=CUSTOMER_ROLES, default=CUSTOMER_ROLE_ORDINARY)
+    location = models.CharField(max_length=30, blank=True)
     is_staff = False
     role = USER_ROLE_CUSTOMER
-    customer_type = models.SmallIntegerField(choices=CUSTOMER_ROLES, default=CUSTOMER_ROLE_ORDINARY)
     objects = CustomerManager()
 
     class Meta:
         verbose_name = 'Customer'
         verbose_name_plural = 'Customers'
+
+class CustomerProfile(models.Model):
+    bio = models.TextField(max_length=500, blank=True)
+    birth_date = models.DateField(null=True, blank=True)
+    customer = models.OneToOneField(Customer, on_delete = models.CASCADE)
+
+    class Meta:
+        verbose_name = 'Профиль'
+        verbose_name_plural = 'Профили'
+
+
+
 
 
 class Manager(User):
