@@ -8,7 +8,10 @@ from ordering.constants import DELIVERY_TYPE_CHOICE, STATUS_CHOICE, STATUS_NEW, 
 from product.models import Flower
 
 
-
+class OrderManager(models.Manager):
+    def del_sessionkey(self):
+        order = self.update(session_key = "")
+        return order
 
 
 class Order(models.Model):
@@ -22,6 +25,7 @@ class Order(models.Model):
     comment = models.TextField(verbose_name='Комментарий к заказу', null=True, blank=True)
     created_at = models.DateTimeField(auto_now=True, verbose_name='Дата создания заказа')
     order_date = models.DateField(verbose_name='Дата получения заказа', default=datetime.date.today)
+    session_key = models.CharField(max_length=100, null=True)
     status = models.CharField(
         max_length=100,
         verbose_name='Статус заказа',
@@ -34,6 +38,7 @@ class Order(models.Model):
         choices=DELIVERY_TYPE_CHOICE,
         default=DELIVERY_TYPE_PICKUP
     )
+    objects = OrderManager()
 
     def __str__(self):
         return self.items

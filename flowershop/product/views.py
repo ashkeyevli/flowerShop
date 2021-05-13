@@ -13,7 +13,6 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 # Create your views here.
 from rest_framework.viewsets import GenericViewSet
-
 from product.models import Category, Flower
 from product.serializers import CateogriesSerializer, FlowerSerializer, FlowerNewSerializer
 
@@ -25,6 +24,7 @@ class CategoryViewSet(viewsets.ModelViewSet):
     # serializer_class = EventSerializer
     queryset = Category.objects.all()
     serializer_class = CateogriesSerializer
+    parser_classes = [MultiPartParser, FormParser, JSONParser]
 
     #
     # def get_queryset(self):
@@ -70,6 +70,7 @@ class CategoryFlowerViewSet(
     queryset = Flower.objects.all()
     # serializer_class = FlowerNewSerializer
     lookup_field = 'pk'
+    parser_classes = [MultiPartParser, FormParser, JSONParser]
 
     # def  get_queryset(self):
     #     pk = self.kwargs.get['pk']
@@ -123,6 +124,7 @@ class FlowerViewSet(viewsets.ModelViewSet):
      # queryset = Book.objects.all()
      serializer_class = FlowerSerializer
      queryset = Flower.objects.all()
+     parser_classes = [MultiPartParser, FormParser, JSONParser]
 
 
      #

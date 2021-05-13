@@ -1,10 +1,13 @@
 from django.db import models
 from django.urls import reverse
 # Create your models here.
+from utils.upload import category_image_directory_path, product_image_directory_path
+from utils.validators import validate_size, validate_extension
+
+
 class Category(models.Model):
     name = models.CharField(max_length=255, verbose_name='Имя категории')
-    # slug = models.SlugField(unique=True)
-    image = models.ImageField(upload_to='../flowershop/product/images/category', default=None, verbose_name='Изображение')
+    image = models.ImageField(upload_to= category_image_directory_path, validators=[validate_size, validate_extension], null=True, blank=True, verbose_name='Изображение')
 
 
     def __str__(self):
@@ -16,8 +19,7 @@ class Category(models.Model):
 class Flower(models.Model):
     category = models.ForeignKey(Category, verbose_name='Категория', on_delete=models.CASCADE, related_name='flowers')
     title = models.CharField(max_length=255, verbose_name='Наименование')
-    # slug = models.SlugField(unique=True)
-    image = models.ImageField(upload_to='../flowershop/product/images/flower', default=None, verbose_name='Изображение')
+    image = models.ImageField(upload_to= product_image_directory_path, validators=[validate_size, validate_extension], null=True, blank=True, verbose_name='Изображение')
     description = models.TextField(verbose_name='Описание', null=True)
     price = models.DecimalField(max_digits=9, decimal_places=2, verbose_name='Стоимость')
     color = models.CharField(max_length=255, verbose_name='Окраска цветка:', default='Красная', null=True, blank=True)

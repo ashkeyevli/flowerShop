@@ -14,29 +14,31 @@ def order_view(request):
     # return Response("ok", status=201)
     order = OrderSerializer()
     customer = Customer.objects.get(username=request.user)
-    cart = request.session.get('cart')
+    session_key = request.session.session_key
+    # cart = request.session.get('cart')
+    # print(type(cart))
     total_price = request.session['total_price']
     context = {
         "total_price": total_price,
         "customer": customer
     }
     order = Order.objects.create(customer = customer, total_price=total_price,
-                         comment=request.data["comment"])
+                         comment=request.data["comment"], session_key=session_key)
 
     # order = OrderSerializer(data = request.data, context = context )
 
-    products = Flower.objects.filter(pk__in=cart.keys())
-    for product in products:
-        cart[str(product.id)]['flower'] = product
-
-    for item in cart.values():
-        # flower = Flower.objects.create(flower = item['flower'])
-        order_item = OrderItem.objects.create(order=order,
-                                 flower=item['flower'],
-                                 quantity=item['quantity']
-                                 )
-
-    result = OrderItem.objects.filter(order=order.id)
+    # products = Flower.objects.filter(pk__in=cart.keys())
+    # for product in products:
+    #     cart[str(product.id)]['flower'] = product
+    #
+    # for item in cart.values():
+    #     # flower = Flower.objects.create(flower = item['flower'])
+    #     order_item = OrderItem.objects.create(order=order,
+    #                              flower=item['flower'],
+    #                              quantity=item['quantity']
+    #                              )
+    #
+    # result = OrderItem.objects.filter(order=order.id)
     # print(result.values())
     serializer = OrderSerializer(order)
 

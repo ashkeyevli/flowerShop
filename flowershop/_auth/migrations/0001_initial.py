@@ -58,7 +58,6 @@ class Migration(migrations.Migration):
             name='Customer',
             fields=[
                 ('user_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='_auth.user')),
-                ('birth_date', models.DateField(blank=True, null=True)),
                 ('customer_type', models.SmallIntegerField(choices=[(1, 'Ordinary'), (2, 'VIP Client')], default=1)),
             ],
             options={
@@ -74,7 +73,6 @@ class Migration(migrations.Migration):
             name='Manager',
             fields=[
                 ('user_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='_auth.user')),
-                ('avatar', models.ImageField(default='C:\\Users\\User\\Desktop\\flowerShop\\flowerShop\\flowerShopBackend\\_auth\\images\\profile.png', upload_to='C:\\Users\\User\\Desktop\\flowerShop\\flowerShop\\flowerShopBackend\\_auth\\images\\profile_pic')),
                 ('salary', models.FloatField(blank=True, null=True, verbose_name='Salary')),
             ],
             options={
