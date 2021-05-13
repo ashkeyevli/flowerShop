@@ -2,12 +2,14 @@ from django.db import models
 
 # Create your models here.
 from _auth.models import Manager
+from utils.upload import event_image_directory_path
+from utils.validators import validate_size, validate_extension
 
 
 class Event(models.Model):
     manager = models.ForeignKey(Manager, verbose_name='Автор', on_delete=models.CASCADE)
     title = models.CharField(max_length=255, verbose_name='Наименование')
-    image = models.ImageField(upload_to='../flowershop/events/images/', default=None, verbose_name='Изображение')
+    image = models.ImageField(upload_to= event_image_directory_path, validators=[validate_size, validate_extension], null=True, blank=True, verbose_name='Изображение')
 
     class Meta:
         verbose_name = 'Event'

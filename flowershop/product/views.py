@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from rest_framework import generics, status
+from rest_framework import generics, status, permissions
 import logging
 from rest_framework import generics, mixins, viewsets
 from rest_framework.decorators import action
@@ -13,6 +13,8 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 # Create your views here.
 from rest_framework.viewsets import GenericViewSet
+
+from _auth.permissions import ManagerPermission, AdminPermission
 from product.models import Category, Flower
 from product.serializers import CateogriesSerializer, FlowerSerializer, FlowerNewSerializer
 
@@ -25,6 +27,16 @@ class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CateogriesSerializer
     parser_classes = [MultiPartParser, FormParser, JSONParser]
+
+    def get_permissions(self):
+        if self.action == 'list':
+            permission_classes = [AllowAny]
+        elif self.action == 'retrieve':
+            permission_classes = [AllowAny]
+        else:
+            permission_classes = [ManagerPermission]
+        return [permission() for permission in permission_classes]
+
 
     #
     # def get_queryset(self):
@@ -62,7 +74,6 @@ class CategoryViewSet(viewsets.ModelViewSet):
 
 
 class CategoryFlowerViewSet(
-                  mixins.CreateModelMixin,
                   viewsets.GenericViewSet):
     # permission_classes = AllowAny
     # queryset = Book.objects.all()
@@ -71,6 +82,11 @@ class CategoryFlowerViewSet(
     # serializer_class = FlowerNewSerializer
     lookup_field = 'pk'
     parser_classes = [MultiPartParser, FormParser, JSONParser]
+    permission_classes = [AllowAny]
+
+
+
+
 
     # def  get_queryset(self):
     #     pk = self.kwargs.get['pk']
@@ -79,7 +95,6 @@ class CategoryFlowerViewSet(
     # @action(methods=['GET'], detail=True)
     def list(self, request, pk):
         # filter = BookFilter(request.GET, queryset=Book.objects.all())
-        print(pk)
         queryset = Flower.objects.filter(category_id=pk)
 
         serializer = FlowerSerializer(queryset, many=True)
@@ -126,6 +141,14 @@ class FlowerViewSet(viewsets.ModelViewSet):
      queryset = Flower.objects.all()
      parser_classes = [MultiPartParser, FormParser, JSONParser]
 
+     def get_permissions(self):
+         if self.action == 'list':
+             permission_classes = [AllowAny]
+         elif self.action == 'retrieve':
+             permission_classes = [AllowAny]
+         else:
+             permission_classes = [ManagerPermission]
+         return [permission() for permission in permission_classes]
 
      #
      # def get_queryset(self):
@@ -140,7 +163,7 @@ class FlowerViewSet(viewsets.ModelViewSet):
      # def list(self, request):
      #     serializer = BookSerializer(self.get_queryset(), many=True)
      #     return Response(serializer.data)
-     @action(methods=['GET'], detail=False, url_path='unavailable')
+     @action(methods=['GET'], detail=False, url_path='unavailable', permission_classes =(ManagerPermission),)
      def not_active(self, request):
          # filter = BookFilter(request.GET, queryset=Book.objects.all())
          queryset = Flower.objects.filter(available=False)

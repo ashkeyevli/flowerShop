@@ -5,13 +5,15 @@ from events.models import Event
 
 
 class EventSerializer(serializers.ModelSerializer):
+    manager = ManagerSerializer(read_only=True)
+
     # quantity = serializers.IntegerField()
     class Meta:
         model = Event
         fields = ('title', 'image', 'manager')
 
 class FullEventSerializer(EventSerializer):
-    manager = ManagerSerializer()
+    manager = ManagerSerializer(read_only=True)
 
     # quantity = serializers.IntegerField()
     class Meta(EventSerializer.Meta):

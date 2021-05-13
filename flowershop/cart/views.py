@@ -7,12 +7,14 @@ from rest_framework.utils import json
 from rest_framework.views import APIView
 
 # Create your views here.
+from _auth.permissions import ManagerPermission, CustomerPermission
 from cart.serializers import CartSerializer
 from product.models import Flower
 from product.serializers import FlowerSerializer
 
 
 class CartList(APIView):
+    permission_classes = [CustomerPermission]
     def get(self, request):
         if request.session.get('cart'):
             id_list = [data_dict.get('pk') for data_dict in request.session['cart'].values()]
@@ -47,7 +49,7 @@ class CartList(APIView):
 
 
 class AddtoCart(APIView):
-
+    permission_classes = [CustomerPermission]
     def post(self, request, pk):
         if not request.session.get('cart'):
             request.session['cart'] = dict()

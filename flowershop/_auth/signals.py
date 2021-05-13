@@ -25,3 +25,9 @@ def delete_avatar_on_profile_delete(sender, instance, **kwargs):
     avatar = instance.avatar
     if avatar:
         admin_avatar_delete(avatar)
+
+@receiver(post_delete, sender = ManagerProfile )
+def delete_avatar_of_manager_on_profile_delete(sender, instance, **kwargs):
+    avatar = instance.avatar
+    if avatar:
+        admin_avatar_delete(avatar)

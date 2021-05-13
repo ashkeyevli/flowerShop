@@ -21,7 +21,7 @@ class CustomerSerializer(UserSerializer):
 class ManagerSerializer(UserSerializer):
     class Meta(UserSerializer.Meta):
         model = Manager
-        fields = UserSerializer.Meta.fields + ('username', 'email', 'data_joined', 'salary', 'avatar',
+        fields = UserSerializer.Meta.fields + ('username', 'email', 'data_joined', 'salary',
                                                'is_staff', 'is_superuser')
 
 class CustomerProfileSerializer(serializers.ModelSerializer):

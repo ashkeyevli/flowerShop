@@ -23,7 +23,7 @@ class Review(Comment):
     rate = models.PositiveIntegerField('Качество обслуживание', default=0)
 #
 class Reply(Comment):
-    review = models.ForeignKey(Review, verbose_name='Отзыв', on_delete=models.CASCADE)
+    review = models.ForeignKey(Review, verbose_name='Отзыв', on_delete=models.CASCADE, related_name='reply')
     manager = models.ForeignKey(Manager, verbose_name='Автор', on_delete=models.CASCADE, related_name='replies')
 #     created_date = models.DateField(verbose_name='Дата ответа', default= datetime.date.today)
 #     description = models.TextField(verbose_name='Описание', null=True)

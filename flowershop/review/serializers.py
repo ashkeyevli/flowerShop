@@ -25,6 +25,7 @@ class postContentSerializer(serializers.ModelSerializer):
 class ReviewSerializer(postContentSerializer):
     customer = CustomerSerializer(read_only=True)
 
+
     class Meta(postContentSerializer.Meta):
         model = Review
         fields = postContentSerializer.Meta.fields + ('title', 'rate', 'customer')
@@ -37,3 +38,16 @@ class ReplySerializer(postContentSerializer):
     class Meta(postContentSerializer.Meta):
         model = Reply
         fields = postContentSerializer.Meta.fields + ('review', 'manager')
+
+class ReplyForReviewSerializer(postContentSerializer):
+    manager = ManagerSerializer(read_only=True)
+
+
+    class Meta(postContentSerializer.Meta):
+        model = Reply
+        fields = postContentSerializer.Meta.fields + ('manager',)
+
+class ReviewFullSerializer(ReviewSerializer):
+    reply = ReplyForReviewSerializer(many= True, read_only=True)
+    class Meta(ReviewSerializer.Meta):
+        fields = ReviewSerializer.Meta.fields + ('reply',)

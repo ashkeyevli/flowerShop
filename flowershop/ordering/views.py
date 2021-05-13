@@ -1,14 +1,16 @@
 # Create your views here.
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 
 from _auth.models import Customer
+from _auth.permissions import ManagerPermission, CustomerPermission
 from ordering.models import Order, OrderItem
 from ordering.serializer import OrderSerializer, OrderItemSerializer
 from product.models import Flower
 
 
 @api_view(['POST'])
+@permission_classes([CustomerPermission])
 def order_view(request):
     # del request.session['cart']
     # return Response("ok", status=201)
