@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from _auth.serializers import CustomerSerializer, ManagerSerializer
+from _auth.serializers import CustomerSerializer, ManagerSerializer, ManagerProfileSerializer, UserSerializer
 from review.models import Review, Comment, Reply
 
 
@@ -16,7 +16,7 @@ class ReviewSerializer(postContentSerializer):
 
     class Meta(postContentSerializer.Meta):
         model = Review
-        fields = postContentSerializer.Meta.fields + ('title', 'rate', 'customer')
+        fields = postContentSerializer.Meta.fields + ('id', 'title', 'rate', 'customer')
 
     def validate_rate(self, value):
         if value < 0:
@@ -32,7 +32,7 @@ class ReviewSerializer(postContentSerializer):
 
 class ReplySerializer(postContentSerializer):
     review = ReviewSerializer(read_only=True)
-    manager = ManagerSerializer(read_only=True)
+    manager = UserSerializer(read_only=True)
 
 
     class Meta(postContentSerializer.Meta):
@@ -40,7 +40,7 @@ class ReplySerializer(postContentSerializer):
         fields = postContentSerializer.Meta.fields + ('review', 'manager')
 
 class ReplyForReviewSerializer(postContentSerializer):
-    manager = ManagerSerializer(read_only=True)
+    manager = UserSerializer(read_only=True)
 
 
     class Meta(postContentSerializer.Meta):

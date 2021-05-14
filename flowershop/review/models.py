@@ -21,6 +21,9 @@ class ReviewManager(models.Manager):
     def get_related(self):
         return self.select_related('customer')
 
+    def get_by_customer(self, customer_id):
+        return self.get_related().filter(customer=customer_id)
+
 class Review(Comment):
     customer = models.ForeignKey(Customer, verbose_name='Автор', on_delete=models.CASCADE, related_name='reviews')
     title = models.CharField(max_length=255, verbose_name='Наименование')

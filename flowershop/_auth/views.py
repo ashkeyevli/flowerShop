@@ -6,11 +6,11 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from _auth.models import Customer, Manager
-from _auth.permissions import ManagerPermission, AdminPermission
-from _auth.serializers import RegisterSerializer, UserSerializer, CustomerSerializer, ManagerSerializer, CustomerProfileSerializer
+from _auth.permissions import ManagerPermission, AdminPermission, CustomerPermission
+from _auth.serializers import RegisterSerializer, UserSerializer, CustomerSerializer, ManagerSerializer, \
+    CustomerProfileSerializer, ManagerProfileSerializer, RegisterManagerSerializer
 from rest_framework import mixins, viewsets
 
-from ordering.models import Order
 
 
 class RegisterAPIView(generics.CreateAPIView):
@@ -21,34 +21,36 @@ class RegisterAPIView(generics.CreateAPIView):
 class CustomersViewSet(mixins. ListModelMixin, mixins.RetrieveModelMixin,
                        mixins.UpdateModelMixin, mixins.DestroyModelMixin, viewsets.GenericViewSet):
     permission_classes = [ManagerPermission]
-    # queryset = Book.objects.all()
-    # serializer_class = EventSerializer
     queryset = Customer.objects.get_related()
-    # customer = Customer.objects.all()
-
-    #
-    # def get_queryset(self):
-    #     return Events.objects.all()
 
     def get_serializer_class(self):
         if self.action == 'list':
             return UserSerializer
+        elif self.action == 'retrieve':
+            return CustomerProfileSerializer
         return CustomerSerializer
+
+    def get_permissions(self):
+        if self.action == 'partial_update':
+            permission_classes = (CustomerPermission,)
+        else:
+            permission_classes = (ManagerPermission,)
+
+        return [permission() for permission in permission_classes]
+
 
 class ManagersViewSet(viewsets.ModelViewSet):
     permission_classes = [AdminPermission]
-    # queryset = Book.objects.all()
-    # serializer_class = EventSerializer
     queryset = Manager.objects.get_related()
-    # customer = Customer.objects.all()
-
-    #
-    # def get_queryset(self):
-    #     return Events.objects.all()
 
     def get_serializer_class(self):
         if self.action == 'list':
             return UserSerializer
+        elif self.action == 'create':
+            return RegisterManagerSerializer
+        elif self.action == 'retrieve':
+            return ManagerProfileSerializer
+
         return ManagerSerializer
 
 

@@ -1,16 +1,26 @@
 # Create your views here.
+from rest_framework import viewsets, mixins
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 
 from _auth.models import Customer
 from _auth.permissions import ManagerPermission, CustomerPermission
 from ordering.models import Order, OrderItem
-from ordering.serializer import OrderSerializer, OrderItemSerializer
+from ordering.serializer import OrderSerializer, OrderItemSerializer, OrderListrSerializer
 from product.models import Flower
 import logging
 
-
 logger = logging.getLogger(__name__)
+
+
+
+
+
+class OrdersViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin, viewsets.GenericViewSet):
+    permission_classes = [ManagerPermission]
+    queryset = Order.objects.get_related()
+    serializer_class = OrderListrSerializer
+
 @api_view(['POST'])
 @permission_classes([CustomerPermission])
 def order_view(request):
@@ -26,34 +36,29 @@ def order_view(request):
         "total_price": total_price,
         "customer": customer
     }
-    order = Order.objects.create(customer = customer, total_price=total_price,
+    try:
+        order = Order.objects.create(customer = customer, total_price=total_price,
                          comment=request.data["comment"], session_key=session_key)
 
-    # order = OrderSerializer(data = request.data, context = context )
+        # order = OrderSerializer(data = request.data, context = context )
 
-    # products = Flower.objects.filter(pk__in=cart.keys())
-    # for product in products:
-    #     cart[str(product.id)]['flower'] = product
-    #
-    # for item in cart.values():
-    #     # flower = Flower.objects.create(flower = item['flower'])
-    #     order_item = OrderItem.objects.create(order=order,
-    #                              flower=item['flower'],
-    #                              quantity=item['quantity']
-    #                              )
-    #
-    # result = OrderItem.objects.filter(order=order.id)
-    # print(result.values())
-    serializer = OrderSerializer(order)
+        # products = Flower.objects.filter(pk__in=cart.keys())
+        # for product in products:
+        #     cart[str(product.id)]['flower'] = product
+        #
+        # for item in cart.values():
+        #     # flower = Flower.objects.create(flower = item['flower'])
+        #     order_item = OrderItem.objects.create(order=order,
+        #                              flower=item['flower'],
+        #                              quantity=item['quantity']
+        #                              )
+        #
+        # result = OrderItem.objects.filter(order=order.id)
 
-
-    # del request.session['cart']
-    #
-    #
-    # serializer = FlowerNewSerializer(data=request.data, context = context)
-    if serializer.is_valid():
-        logger.info(f'Order object was created, ID:{serializer.instance}')
-        return Response(order.data, status=201)
-    logger.warning(f'Order object was not created')
-    logger.error(f'Server error')
-    return Response(serializer.errors, status=500)
+        serializer = OrderSerializer(order)
+        del request.session['cart']
+        logger.info(f'Order object created, ID: {serializer.instance}')
+        return Response(serializer.data, status=201)
+    except:
+        logger.error(f'Order object was not created')
+        return Response('Serializer error', status=500)

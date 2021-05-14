@@ -6,7 +6,7 @@ def category_image_directory_path(instance, filename):
     return f'category_photos/{instance.name}/{filename}'
 
 def product_image_directory_path(instance, filename):
-    return f'category_photos/{instance.title}/{filename}'
+    return f'flower_photos/{instance.title}/{filename}'
 
 def event_image_directory_path(instance, filename):
     return f'events/{instance.title}/{filename}'

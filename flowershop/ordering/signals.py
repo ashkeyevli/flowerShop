@@ -10,14 +10,12 @@ from product.models import Flower
 def user_created(sender, instance, created, **kwargs):
     if created:
         session = SessionStore(session_key=instance.session_key)
-
         cart = session.get('cart')
         products = Flower.objects.filter(pk__in=cart.keys())
         for product in products:
             cart[str(product.id)]['flower'] = product
 
         for item in cart.values():
-            # flower = Flower.objects.create(flower = item['flower'])
             order_item = OrderItem.objects.create(order=instance,
                                                   flower=item['flower'],
                                                   quantity=item['quantity'])

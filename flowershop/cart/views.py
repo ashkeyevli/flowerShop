@@ -1,15 +1,10 @@
 from decimal import Decimal
 import logging
 
-from django.shortcuts import render
 from rest_framework import status
 from rest_framework.response import Response
-from rest_framework.utils import json
 from rest_framework.views import APIView
-
-# Create your views here.
 from _auth.permissions import ManagerPermission, CustomerPermission
-from cart.serializers import CartSerializer
 from product.models import Flower
 from product.serializers import FlowerSerializer
 
@@ -29,25 +24,9 @@ class CartList(APIView):
 
         for flower in flowers:
             cart[str(flower.pk)]['total_product_price'] = float(cart[str(flower.pk)]['quantity'] * flower.price)
-                # json.dumps(cart[str(flower.pk)]['quantity'] * flower.price, ensure_ascii=False, default=str)
             serializer = FlowerSerializer(flower)
             cart[str(flower.pk)]['flower'] = serializer.data
-        # total_price = sum([cart_item['total_product_price'] for cart_item in cart.values()])
-        # # cart['total_price'] = total_price
-        # cart['total_price'] = json.dumps(total_price, ensure_ascii=False, default=str)
-        # # request.session.save()
-        # request.session.modified = True
         cart['total_price'] = request.session['total_price']
-
-
-
-
-
-
-
-        # serializer = CartSerializer(cart, many=True)
-
-
         return Response(cart, status=200)
 
 

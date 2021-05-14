@@ -8,11 +8,13 @@ from _auth.views import CustomersViewSet, RegisterAPIView, ManagersViewSet, prof
 router = routers.SimpleRouter()
 router.register('customers', CustomersViewSet),
 router.register('managers', ManagersViewSet),
+# router.register('profile', profileViewSet),
 
 
 urlpatterns = [
     path('login/', obtain_jwt_token),
-    path('profile/', profileAPIView.as_view())
+    path('profile/', profileAPIView.as_view()),
+    path('register/', RegisterAPIView.as_view()),
 ]
 
 urlpatterns += router.urls

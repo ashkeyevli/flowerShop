@@ -6,10 +6,4 @@ router = routers.SimpleRouter()
 router.register('', EventViewSet)
 
 
-# urlpatterns = [
-#     # path('books/', BookViewSet.as_view({'get': 'list'})),
-#     # path('books/<int:pk>/', BookApiView.as_view()),
-#     path('authors/<int:pk>/', AuthorApiView.as_view())
-# ]
-
 urlpatterns = router.urls

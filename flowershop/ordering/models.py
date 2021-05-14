@@ -14,15 +14,16 @@ class OrderManager(models.Manager):
         order = self.update(session_key = "")
         return order
     def get_prefetch_related(self):
-        return self.select_related('items')
+        return self.prefetch_related('items')
+    def get_related(self):
+        return self.select_related('customer')
+
+    def __str__(self):
+        return self.items
 
 class Order(models.Model):
     customer = models.ForeignKey(Customer, verbose_name='Покупатель', related_name='related_orders',
                                  on_delete=models.CASCADE)
-    # first_name = models.CharField(max_length=255, verbose_name='Имя')
-    # last_name = models.CharField(max_length=255, verbose_name='Фамилия')
-    # phone = models.CharField(max_length=20, verbose_name='Номер телефона')
-    # address = models.CharField(max_length=1024, verbose_name='Адрес', null=True, blank=True)
     total_price = models.DecimalField(max_digits=9, decimal_places=2, verbose_name='Счет к заказу')
     comment = models.TextField(verbose_name='Комментарий к заказу', null=True, blank=True)
     created_at = models.DateTimeField(auto_now=True, verbose_name='Дата создания заказа')
@@ -42,8 +43,7 @@ class Order(models.Model):
     )
     objects = OrderManager()
 
-    def __str__(self):
-        return self.items
+
 
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items')

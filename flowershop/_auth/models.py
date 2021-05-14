@@ -28,20 +28,10 @@ class MainUserManager(BaseUserManager):
         return self._create_user(username, password, **extra_fiels)
 
 class CustomerManager(MainUserManager):
-    def create_customer(self, username, password=None, **extra_fiels):
-        extra_fiels.setdefault('is_superuser', False)
-        return self._create_user(username, password, **extra_fiels)
-
-
     def get_related(self):
         return self.prefetch_related('related_orders')
 
 class ManagerManager(MainUserManager):
-    def create_stuff(self, username, password=None, **extra_fiels):
-        extra_fiels.setdefault('is_superuser', False)
-        if extra_fiels.get('is_superuser') is not True:
-            raise ValueError('it is not superuser')
-        return self._create_user(username, password, **extra_fiels)
 
     def get_related(self):
         return self.prefetch_related('events')
@@ -53,11 +43,6 @@ class AdminManager(MainUserManager):
             raise ValueError('it is not superuser')
         return self._create_user(username, password, **extra_fiels)
 
-    def create_stuff(self, username, password=None, **extra_fiels):
-        extra_fiels.setdefault('is_superuser', False)
-        if extra_fiels.get('is_superuser') is not True:
-            raise ValueError('it is not superuser')
-        return self._create_user(username, password, **extra_fiels)
 
 
 
@@ -103,14 +88,12 @@ class Manager(User):
     salary = models.FloatField(null=True, blank=True , verbose_name="Salary")
     role = USER_ROLE_MANAGER
     objects = ManagerManager()
-    # objects = StaffManager()
-
     class Meta:
         verbose_name = 'Manager'
         verbose_name_plural = 'Managers'
 
 class ManagerProfile(models.Model):
-    avatar = models.ImageField(upload_to= manager_image_directory_path, validators=[validate_size, validate_extension], null=True, blank=True, verbose_name='Изображение', default=r'C:\Users\User\Desktop\flowerShop\flowerShop\flowerShopBackend\_auth\images\profile.png')
+    avatar = models.ImageField(upload_to= manager_image_directory_path, validators=[validate_size, validate_extension], null=True, blank=True, verbose_name='Изображение', default=r'users/profile.png')
     bio = models.TextField(max_length=500, blank=True)
     birth_date = models.DateField(null=True, blank=True)
     manager = models.OneToOneField(Manager, on_delete = models.CASCADE)
@@ -129,7 +112,7 @@ class Admin(User):
         verbose_name_plural = 'Admins'
 
 class AdminProfile(models.Model):
-    avatar = models.ImageField(upload_to= admin_image_directory_path, validators=[validate_size, validate_extension], null=True, blank=True, verbose_name='Изображение', default=r'C:\Users\User\Desktop\flowerShop\flowerShop\flowerShopBackend\_auth\images\profile.png')
+    avatar = models.ImageField(upload_to= admin_image_directory_path, validators=[validate_size, validate_extension], null=True, blank=True, verbose_name='Изображение', default=r'media/users/profile.png')
     bio = models.TextField(max_length=500, blank=True)
     birth_date = models.DateField(null=True, blank=True)
     admin = models.OneToOneField(Admin, on_delete = models.CASCADE)

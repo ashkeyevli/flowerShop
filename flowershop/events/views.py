@@ -13,8 +13,6 @@ from events.serializers import EventSerializer, FullEventSerializer
 
 logger = logging.getLogger(__name__)
 class EventViewSet(viewsets.ModelViewSet):
-    # permission_classes = AllowAny
-    # queryset = Book.objects.all()
     serializer_class = EventSerializer
     queryset = Event.objects.all()
 
@@ -40,38 +38,3 @@ class EventViewSet(viewsets.ModelViewSet):
         logger.warning(f'Event object was not created by {manager.username}')
         logger.error(f'Server error')
         return Response(serializer.errors, status=500)
-
-    #
-    # def get_queryset(self):
-    #     return Events.objects.all()
-
-    # def get_serializer_class(self):
-    #     if self.action == 'list':
-    #         return EventSerializer
-    #     elif self.action == 'create':
-    #
-    #         return EventSerializer
-    #     return FullEventSerializer
-
-
-
-
-
-
-    # def list(self, request):
-    #     serializer = BookSerializer(self.get_queryset(), many=True)
-    #     return Response(serializer.data)
-
-    # @action(methods=['GET'], detail=False, url_path='inactive', url_name='in_active',
-    #         permission_classes=(AuthorPermission,))
-    #
-    #     # filter = BookFilter(request.GET, queryset=Book.objects.all())
-    #     # queryset = Book.objects.filter(is_active=False)
-    #     serializer = BookSerializer(self.get_queryset(), many=True)
-    #     return Response(serializer.data)
-    #
-    # @action(methods=['POST'], detail=False, permission_classes=(AllowAny,))
-    # def create_book(self, request):
-    #     serializer = BookSerializer(data=request.data)
-    #     serializer.is_valid(raise_exception=True)
-    #     return Response('OK')
