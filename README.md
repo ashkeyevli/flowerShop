@@ -1,34 +1,35 @@
-# Guidelines for installing a container with a VERIFACE face recognition system on a server machine
+# Guidelines for installing a flower online shop on your computer
 
 
 ## Requirements 
 
-Installed docker, docker-compose
+Installed python version 3
 
-This module compares two faces with each other
-
+This service provides opportunity to add categories, flowers, events and reviews and manage users(Admin, Managers, Customers)
 
 ## Installation 
-* Put face detection models in folder `dengi-group/server/models/face_detection/`
-* Put checkpoints in folder `dengi-group/server/models/face_recognition/`
-* Put liveness model in folder `dengi-group/server/liveness-model/`
-
-Finally you need to run `docker-compose up` command.
+* Install virtual environment `pip install virtualenv`
+* create virtual environment `virtalenv <enviroment name>`
+* activate virtual environment
+* Install all packages to your virtual environment `pip install -r requirements.txt`
 
 Installation complete
-#### Open new docker terminal and create table logs by following commands
-In new terminal run 
-```docker exec -ti dengi-group_db_1 psql -U postgres```
-* Create table logs ```CREATE TABLE logs(id SERIAL PRIMARY KEY,full_recognition_time VARCHAR, doc VARCHAR, photo VARCHAR, score VARCHAR, cos_distance VARCHAR, boundingbox_doc VARCHAR, boundingbox_photo VARCHAR);```
+#### Open project in your IDE
+Go to file flowershop/flowershop/settings.py and look for Database settings. In this project I used **postgres**.
+Install database with configurations in settings.
 
-## Test POST
+In terminal with activated environment type
+`python manage.py makemigrations`
 
-To compare two images just send POST request like example bellow:
+```python manage.py migrate```
 
-```
-curl -X POST -F "photo=@<path to the photo from WebCamera>" -F "doc=@<path to the photo from the document>" localhost:5000/
+```python manage.py runserver```
 
-```
+## Test in Postman
+
+Install postman and use my postman collection to test all functionality
+link to postman collection: `https://www.postman.com/collections/7a04e2add862bd0ad786` or use file **flowerShop.postman_collection.json**
+
 
 ##View logs
-* In terminal where table logs was created run ```select * from logs;```
+* In terminal you can logs or in file test_main.log
