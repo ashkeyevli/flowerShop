@@ -8,11 +8,13 @@ from ordering.constants import DELIVERY_TYPE_CHOICE, STATUS_CHOICE, STATUS_NEW, 
 from product.models import Flower
 
 
+
 class OrderManager(models.Manager):
     def del_sessionkey(self):
         order = self.update(session_key = "")
         return order
-
+    def get_prefetch_related(self):
+        return self.select_related('items')
 
 class Order(models.Model):
     customer = models.ForeignKey(Customer, verbose_name='Покупатель', related_name='related_orders',

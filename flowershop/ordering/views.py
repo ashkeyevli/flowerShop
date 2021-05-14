@@ -7,8 +7,10 @@ from _auth.permissions import ManagerPermission, CustomerPermission
 from ordering.models import Order, OrderItem
 from ordering.serializer import OrderSerializer, OrderItemSerializer
 from product.models import Flower
+import logging
 
 
+logger = logging.getLogger(__name__)
 @api_view(['POST'])
 @permission_classes([CustomerPermission])
 def order_view(request):
@@ -49,7 +51,9 @@ def order_view(request):
     #
     #
     # serializer = FlowerNewSerializer(data=request.data, context = context)
-    # if order.is_valid():
-    #     order.save()
-    #     return Response(order.data, status=201)
-    return Response(serializer.data, status=201)
+    if serializer.is_valid():
+        logger.info(f'Order object was created, ID:{serializer.instance}')
+        return Response(order.data, status=201)
+    logger.warning(f'Order object was not created')
+    logger.error(f'Server error')
+    return Response(serializer.errors, status=500)

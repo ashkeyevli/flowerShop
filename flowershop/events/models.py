@@ -7,7 +7,7 @@ from utils.validators import validate_size, validate_extension
 
 
 class Event(models.Model):
-    manager = models.ForeignKey(Manager, verbose_name='Автор', on_delete=models.CASCADE)
+    manager = models.ForeignKey(Manager, verbose_name='Автор', on_delete=models.CASCADE, related_name='events')
     title = models.CharField(max_length=255, verbose_name='Наименование')
     image = models.ImageField(upload_to= event_image_directory_path, validators=[validate_size, validate_extension], null=True, blank=True, verbose_name='Изображение')
 

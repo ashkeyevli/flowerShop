@@ -6,8 +6,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from _auth.models import Customer, Manager
-from _auth.serializers import RegisterSerializer, UserSerializer, CustomerSerializer, ManagerSerializer, \
-    CustomerProfileSerializer
+from _auth.permissions import ManagerPermission, AdminPermission
+from _auth.serializers import RegisterSerializer, UserSerializer, CustomerSerializer, ManagerSerializer, CustomerProfileSerializer
 from rest_framework import mixins, viewsets
 
 from ordering.models import Order
@@ -20,10 +20,10 @@ class RegisterAPIView(generics.CreateAPIView):
 
 class CustomersViewSet(mixins. ListModelMixin, mixins.RetrieveModelMixin,
                        mixins.UpdateModelMixin, mixins.DestroyModelMixin, viewsets.GenericViewSet):
-    # permission_classes = AllowAny
+    permission_classes = [ManagerPermission]
     # queryset = Book.objects.all()
     # serializer_class = EventSerializer
-    queryset = Customer.objects.all()
+    queryset = Customer.objects.get_related()
     # customer = Customer.objects.all()
 
     #
@@ -36,10 +36,10 @@ class CustomersViewSet(mixins. ListModelMixin, mixins.RetrieveModelMixin,
         return CustomerSerializer
 
 class ManagersViewSet(viewsets.ModelViewSet):
-    # permission_classes = AllowAny
+    permission_classes = [AdminPermission]
     # queryset = Book.objects.all()
     # serializer_class = EventSerializer
-    queryset = Manager.objects.all()
+    queryset = Manager.objects.get_related()
     # customer = Customer.objects.all()
 
     #

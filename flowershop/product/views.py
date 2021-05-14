@@ -19,6 +19,8 @@ from product.models import Category, Flower
 from product.serializers import CateogriesSerializer, FlowerSerializer, FlowerNewSerializer
 
 
+logger = logging.getLogger(__name__)
+
 
 class CategoryViewSet(viewsets.ModelViewSet):
     # permission_classes = AllowAny
@@ -36,6 +38,10 @@ class CategoryViewSet(viewsets.ModelViewSet):
         else:
             permission_classes = [ManagerPermission]
         return [permission() for permission in permission_classes]
+    def perform_create(self, serializer):
+        serializer.save()
+        logger.debug(f'Category object created, ID: {serializer.instance} by {self.request.user.username}')
+
 
 
     #
@@ -96,8 +102,9 @@ class CategoryFlowerViewSet(
     def list(self, request, pk):
         # filter = BookFilter(request.GET, queryset=Book.objects.all())
         queryset = Flower.objects.filter(category_id=pk)
+        logger.debug('Category Flowers')
 
-        serializer = FlowerSerializer(queryset, many=True)
+        serializer = FlowerNewSerializer(queryset, many=True)
         return Response(serializer.data)
 
     # @action(methods=['POST'], detail=True)
@@ -137,7 +144,7 @@ class CategoryFlowerViewSet(
 class FlowerViewSet(viewsets.ModelViewSet):
      # permission_classes = AllowAny
      # queryset = Book.objects.all()
-     serializer_class = FlowerSerializer
+     serializer_class = FlowerNewSerializer
      queryset = Flower.objects.all()
      parser_classes = [MultiPartParser, FormParser, JSONParser]
 
@@ -149,6 +156,10 @@ class FlowerViewSet(viewsets.ModelViewSet):
          else:
              permission_classes = [ManagerPermission]
          return [permission() for permission in permission_classes]
+
+     def perform_create(self, serializer):
+         serializer.save()
+         logger.debug(f'Flower object created, ID: {serializer.instance} by {self.request.user.username}')
 
      #
      # def get_queryset(self):
@@ -165,9 +176,10 @@ class FlowerViewSet(viewsets.ModelViewSet):
      #     return Response(serializer.data)
      @action(methods=['GET'], detail=False, url_path='unavailable', permission_classes =(ManagerPermission),)
      def not_active(self, request):
+         logger.debug('unavailable flowers')
          # filter = BookFilter(request.GET, queryset=Book.objects.all())
          queryset = Flower.objects.filter(available=False)
-         serializer = FlowerSerializer(queryset, many=True)
+         serializer = FlowerNewSerializer(queryset, many=True)
          return Response(serializer.data)
          #
          # # filter = BookFilter(request.GET, queryset=Book.objects.all())

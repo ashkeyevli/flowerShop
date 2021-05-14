@@ -1,8 +1,16 @@
+import sys
+
 from django.contrib.auth.hashers import BCryptSHA256PasswordHasher
 from rest_framework import serializers
 
 from _auth.models import Customer, Manager, User, CustomerProfile
-from ordering.serializer import OrderSerializer
+from ordering.serializer import OrderSerializer, OrderCustomerSerializer
+# try:
+#     from events.serializers import EventSerializer
+# except ImportError:
+#     EventSerializer = sys.modules['flowershop.events.EventSerializer']
+    # EventSerializer = sys.modules['serializers.EventSerializer']
+from events.serializers import EventSerializer
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -12,17 +20,19 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class CustomerSerializer(UserSerializer):
-    related_order = OrderSerializer(many=True, read_only=True)
+    related_orders = OrderCustomerSerializer(many=True, read_only=True)
     class Meta(UserSerializer.Meta):
         model = Customer
-        fields = UserSerializer.Meta.fields + ('username', 'email', 'data_joined', 'customer_type', 'location',
-                                               'related_order')
+        fields = UserSerializer.Meta.fields + ('username', 'email', 'data_joined', 'customer_type', 'location', 'related_orders')
 
 class ManagerSerializer(UserSerializer):
+    events = EventSerializer(many=True, read_only=True)
+
     class Meta(UserSerializer.Meta):
         model = Manager
         fields = UserSerializer.Meta.fields + ('username', 'email', 'data_joined', 'salary',
-                                               'is_staff', 'is_superuser')
+                                               'is_staff', 'is_superuser', 'events')
+
 
 class CustomerProfileSerializer(serializers.ModelSerializer):
     customer = CustomerSerializer()

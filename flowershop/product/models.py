@@ -16,6 +16,7 @@ class Category(models.Model):
     def get_absolute_url(self):
         return reverse('category_detail', kwargs={'slug': self.slug})
 
+
 class Flower(models.Model):
     category = models.ForeignKey(Category, verbose_name='Категория', on_delete=models.CASCADE, related_name='flowers')
     title = models.CharField(max_length=255, verbose_name='Наименование')

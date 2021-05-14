@@ -1,4 +1,5 @@
 from decimal import Decimal
+import logging
 
 from django.shortcuts import render
 from rest_framework import status
@@ -12,6 +13,8 @@ from cart.serializers import CartSerializer
 from product.models import Flower
 from product.serializers import FlowerSerializer
 
+
+logger = logging.getLogger(__name__)
 
 class CartList(APIView):
     permission_classes = [CustomerPermission]
@@ -78,6 +81,7 @@ class AddtoCart(APIView):
         request.session['total_price'] = total_price
 
         request.session.modified = True
+        logger.info(f'Cart, ID:{serializer.instance} was created')
         return Response(add_data, status= status.HTTP_201_CREATED)
 
 

@@ -21,6 +21,16 @@ class FlowerNewSerializer(serializers.Serializer):
     stock = serializers.IntegerField()
     available = serializers.BooleanField()
 
+    def validate_price(self, value):
+        if value < 0:
+            raise serializers.ValidationError('Цена должна быть больше нуля')
+        return value
+
+    def validate_stock(self, value):
+        if value < 0:
+            raise serializers.ValidationError('Скидка должна быть больше нуля')
+        return value
+
     def create(self, validated_data):
         flower = Flower.objects.create( **validated_data)
         return flower
@@ -39,10 +49,27 @@ class FlowerNewSerializer(serializers.Serializer):
 
 
 
+
+
+
+
+
+
+
 class FlowerSerializer(serializers.ModelSerializer):
     # id = serializers.ImageField()
     class Meta:
         model = Flower
         fields = '__all__'
+
+    def validate_price(self, value):
+        if value < 0:
+            raise serializers.ValidationError('Цена должна быть больше нуля')
+        return value
+
+    def validate_stock(self, value):
+        if value < 0:
+            raise serializers.ValidationError('Скидка должна быть больше нуля')
+        return value
 
 

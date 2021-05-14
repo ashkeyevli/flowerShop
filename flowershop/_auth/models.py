@@ -32,12 +32,19 @@ class CustomerManager(MainUserManager):
         extra_fiels.setdefault('is_superuser', False)
         return self._create_user(username, password, **extra_fiels)
 
-# class StaffManager(MainUserManager):
-#     def create_stuff(self, username, password=None, **extra_fiels):
-#         extra_fiels.setdefault('is_superuser', False)
-#         if extra_fiels.get('is_superuser') is not True:
-#             raise ValueError('it is not superuser')
-#         return self._create_user(username, password, **extra_fiels)
+
+    def get_related(self):
+        return self.prefetch_related('related_orders')
+
+class ManagerManager(MainUserManager):
+    def create_stuff(self, username, password=None, **extra_fiels):
+        extra_fiels.setdefault('is_superuser', False)
+        if extra_fiels.get('is_superuser') is not True:
+            raise ValueError('it is not superuser')
+        return self._create_user(username, password, **extra_fiels)
+
+    def get_related(self):
+        return self.prefetch_related('events')
 
 class AdminManager(MainUserManager):
     def create_superuser(self, username, password=None, **extra_fiels):
@@ -74,6 +81,7 @@ class Customer(User):
     location = models.CharField(max_length=30, blank=True)
     is_staff = False
     role = USER_ROLE_CUSTOMER
+    objects = CustomerManager()
 
 
     class Meta:
@@ -94,6 +102,7 @@ class Manager(User):
 
     salary = models.FloatField(null=True, blank=True , verbose_name="Salary")
     role = USER_ROLE_MANAGER
+    objects = ManagerManager()
     # objects = StaffManager()
 
     class Meta:

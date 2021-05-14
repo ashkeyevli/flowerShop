@@ -15,6 +15,8 @@ class OrderItemSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+
+
     # def create(self, validated_data):
     #     flower = OrderItem.objects.create( **validated_data)
     #     return flower
@@ -54,4 +56,30 @@ class OrderSerializer(serializers.ModelSerializer):
         model = Order
         fields = ('customer', 'total_price', 'comment', 'created_at', 'order_date', 'delivery_type', 'status', 'items')
 
+    def validate_total_price(self, value):
+        if value < 0:
+            raise serializers.ValidationError('Вы не заказали ничего')
+        return value
+
+class OrderCustomerSerializer(serializers.ModelSerializer):
+    items = OrderItemSerializer(many=True, read_only=True)
+
+
+
+    # def create(self, validated_data):
+         # print(self.context.get("customer"))
+         # order = Order.objects.create(customer=validated_data("customer"), total_price=validated_data("total_price"),
+         #                            comment=validated_data('comment'), created_at=validated_data('created_at'),
+         #                            order_date=validated_data('order_date'), delivery_type=validated_data('delivery_type'),
+         #                              status=validated_data('status')
+         #                              )
+         # return order
+    class Meta:
+        model = Order
+        fields = ('total_price', 'comment', 'created_at', 'order_date', 'delivery_type', 'status', 'items')
+
+    def validate_total_price(self, value):
+        if value < 0:
+            raise serializers.ValidationError('Вы не заказали ничего')
+        return value
 
