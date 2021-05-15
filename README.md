@@ -7,6 +7,13 @@ Installed python version 3
 
 This is e-commerce backend for Flower shop based on **django, django rest-framework**. Service provides opportunity to add categories, flowers, events and reviews, manage them. Also you can manage users(Admins, Managers, Customers)
 
+##Main Features
+
+* Rest framework
+* Validators, signals, logging
+* fbv, cbv, viewSets
+* File upload
+
 ## Installation 
 * Install virtual environment `pip install virtualenv`
 * create virtual environment `virtalenv <enviroment name>`
@@ -30,8 +37,12 @@ In terminal with activated environment type
 
 Install postman and use my postman collection to test all functionality.
 
-_link to postman collection:_ `https://www.postman.com/collections/7a04e2add862bd0ad786` or use file **flowerShop.postman_collection.json**
+_link to postman collection:_ `https://www.postman.com/collections/7a04e2add862bd0ad786 ` or use file **flowerShop.postman_collection.json**
 
 
-##View logs
+## View logs
+
 * In terminal you can see logs or in file test_main.log
+## Author
+
+Ashkeyev Ali - ashkeyevli@gmail.com

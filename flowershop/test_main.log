@@ -23,3 +23,5 @@ INFO -- 2021-05-14 23:06:00,726: Cart, ID:Updated flower3 was created
 INFO -- 2021-05-14 23:06:04,638: Cart, ID:Roses Pink Floid was created
 INFO -- 2021-05-14 23:06:17,941: Order object created, ID: Order object (121)
 INFO -- 2021-05-14 23:19:13,604: Event object was created, ID:34
+INFO -- 2021-05-15 07:17:56,725: Cart, ID:Roses Pink Floid was created
+INFO -- 2021-05-15 07:18:11,596: Order object created, ID: Order object (122)
